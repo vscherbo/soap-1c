@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO)
 wsdl_url='https://api.orgregister.1c.ru/orgregister/v2?wsdl'
 
 conf = {}
-execfile("./soap-1c.conf", conf) # reading username, password
+execfile("./1c-its.conf", conf) # reading username, password
 
 transport = HttpAuthenticated(username=conf['username'],
                               password=conf['password'])
@@ -85,7 +85,7 @@ print '----- End of client -----'
 # End
 
 #logging.getLogger('suds.client').setLevel(logging.DEBUG)
-#logging.getLogger('suds.transport').setLevel(logging.DEBUG)
+logging.getLogger('suds.transport').setLevel(logging.DEBUG)
 
 #confName='Базовая конфигурация'.decode("utf-8")
 result = client.service.getCorporationRequisitesByINN('7804431521')
