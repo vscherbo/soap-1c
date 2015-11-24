@@ -23,7 +23,7 @@ xml_data = xml_prefix + inn.encode('utf8') +  xml_suffix
 
 req = requests.Request(u'POST', url_1c_api, data=xml_data)
 prepped = sess.prepare_request(req)
-r = sess.send(prepped)
+r = sess.send(prepped, timeout=5)
 #flog.write("r.text=" + r.text +'\n')
 return r.text
 $BODY$
