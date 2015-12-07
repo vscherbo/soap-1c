@@ -19,7 +19,8 @@ WITH (
 ALTER TABLE chk_inn_task
   OWNER TO arc_energo;
 COMMENT ON COLUMN chk_inn_task.status IS '0 - задача создана
-1 - задача приостановлена
-2 - задача завршена
+1 - задача НЕ завершена
+2 - задача завершена
+8 - задача приостановлена
 9 - данные использованы';
 
