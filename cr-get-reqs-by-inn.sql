@@ -1,5 +1,12 @@
-CREATE OR REPLACE FUNCTION get_reqs_by_inn(inn character varying, OUT ret_flg boolean, OUT ret_txt character varying)
-  RETURNS RECORD AS
+-- Function: public.get_reqs_by_inn(character varying)
+
+-- DROP FUNCTION public.get_reqs_by_inn(character varying);
+
+CREATE OR REPLACE FUNCTION public.get_reqs_by_inn(
+    IN inn character varying,
+    OUT ret_flg boolean,
+    OUT ret_txt character varying)
+  RETURNS record AS
 $BODY$
 import requests
 from datetime import datetime
@@ -36,3 +43,5 @@ return ret_flg, ret_txt
 $BODY$
   LANGUAGE plpython2u VOLATILE
   COST 100;
+ALTER FUNCTION public.get_reqs_by_inn(character varying)
+  OWNER TO postgres;
