@@ -1,7 +1,6 @@
 -- Table: chk_inn_task
 
--- 
-DROP TABLE chk_inn_task;
+-- DROP TABLE chk_inn_task;
 
 CREATE TABLE chk_inn_task
 (
