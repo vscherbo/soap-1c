@@ -9,6 +9,7 @@ from datetime import datetime
 #import codecs
 #flog=codecs.open('/tmp/checkinn.log', 'a', 'utf-8')
 #flog.write("Start at " + str(datetime.now()) +'\n')
+good_status = [ 200, 500 ]
 
 url_1c_api = u'https://api.orgregister.1c.ru/orgregister/v2?wsdl'
 sess = requests.Session()
@@ -23,9 +24,19 @@ xml_data = xml_prefix + inn.encode('utf8') +  xml_suffix
 
 req = requests.Request(u'POST', url_1c_api, data=xml_data)
 prepped = sess.prepare_request(req)
-r = sess.send(prepped, timeout=5)
-#flog.write("r.text=" + r.text +'\n')
-return r.text
+ret_txt = 'Before send'
+try:
+    r = sess.send(prepped,timeout=5)
+except BaseException as e:
+    ret_txt = str(e)
+else:
+    if r.status_code in good_status:
+        ret_txt = r.reason if r.text is None else r.text
+    else
+        
+    #flog.write("r.text=" + r.text +'\n')
+    #r.elapsed
+return ret_txt
 $BODY$
   LANGUAGE plpython2u VOLATILE
   COST 100;
