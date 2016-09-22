@@ -18,7 +18,7 @@ BEGIN
          loc_txt := res.ret_txt;
       ELSE
          tsk.status := 1;
-         loc_txt := tsk.chk_result || '/' || res.ret_txt;
+         loc_txt := COALESCE(tsk.chk_result, '') || '/' || COALESCE(res.ret_txt, 'ret_txt');
       END IF;
       UPDATE chk_inn_task SET 
                             attempt = tsk.attempt,
