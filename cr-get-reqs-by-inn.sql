@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.get_reqs_by_inn(character varying);
 
-CREATE OR REPLACE FUNCTION public.get_reqs_by_inn_debug(
+CREATE OR REPLACE FUNCTION public.get_reqs_by_inn(
     IN inn character varying,
     OUT ret_flg boolean,
     OUT ret_txt character varying)
@@ -15,13 +15,15 @@ from datetime import datetime
 #flog.write("Start at " + str(datetime.now()) +'\n')
 good_status = [ 200, 500 ]
 
-if len(inn.encode('utf8')) == 10: # Corporation
+len_inn = len(inn)
+
+if 10 == len_inn: # Corporation
    NameSpace = u"getCorporationRequisitesByINN"
-elif len(inn.encode('utf8')) == 12: # Entrepreneur
+elif 12 == len_inn: # Entrepreneur
    NameSpace = u"getEntrepreneurRequisitesByINN"
 else:
    ret_flg = False
-   ret_txt = 'Допустимая длина ИНН 10 или 12 цифр.'
+   ret_txt = u"Недопустимая длина={} ИНН={}. Допустимо 10 или 12 цифр.".format(len_inn, inn)
    return ret_flg, ret_txt
 
 url_1c_api = u'https://api.orgregister.1c.ru/orgregister/v2?wsdl'
