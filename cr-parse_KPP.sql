@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION parse_kpp(character varying);
 
-CREATE OR REPLACE FUNCTION parse_kpp(
+CREATE OR REPLACE FUNCTION arc_energo.parse_kpp(
     IN in_xml character varying,
     OUT ret_kpp_flg boolean,
     OUT ret_kpp character varying)
@@ -29,5 +29,4 @@ return ret_kpp_flg, ret_kpp
 $BODY$
   LANGUAGE plpython2u VOLATILE
   COST 100;
-ALTER FUNCTION parse_kpp(character varying)
-  OWNER TO postgres;
+-- ALTER FUNCTION parse_kpp(character varying)   OWNER TO postgres;
