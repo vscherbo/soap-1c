@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(description='Get requisites by INN.')
 parser.add_argument('--inn', type=str, default=u'7804431521', help='ИНН')
 args = parser.parse_args()
 
-url_1c_api = 'https://api.orgregister.1c.ru/orgregister/v2?wsdl'
+url_1c_api = 'https://api.orgregister.1c.ru/orgregister/v7?wsdl'
 sess = requests.Session()
 sess.auth = (conf['username'], conf['password'])
 # sess.headers.update({'Content-Type': 'application/json'})
