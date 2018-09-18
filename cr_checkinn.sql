@@ -11,7 +11,7 @@ from datetime import datetime
 #flog.write("Start at " + str(datetime.now()) +'\n')
 good_status = [ 200, 500 ]
 
-url_1c_api = u'https://api.orgregister.1c.ru/orgregister/v2?wsdl'
+url_1c_api = u'https://api.orgregister.1c.ru/orgregister/v7?wsdl'
 sess = requests.Session()
 sess.auth = ('TDEnergoService', 'energ0serv1ce')
 sess.headers.update({'SOAPAction': u'""', 'Content-Type': 'text/xml; charset=utf-8', 'Content-type': 'text/xml; charset=utf-8', 'Soapaction': u'""'})

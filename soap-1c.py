@@ -23,7 +23,7 @@ class UTFPlugin(MessagePlugin):
 
 logging.basicConfig(level=logging.INFO)
 
-wsdl_url='https://api.orgregister.1c.ru/orgregister/v2?wsdl'
+wsdl_url='https://api.orgregister.1c.ru/orgregister/v7?wsdl'
 
 conf = {}
 execfile("./1c-its.conf", conf) # reading username, password
