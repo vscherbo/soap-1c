@@ -1,0 +1,33 @@
+/* SQL */
+select * from branch_info((select chk_result FROM test_xml WHERE inn='7705905273' and xml_type = 2))
+as
+("НаимПолн" text
+,"Страна" text
+,"Индекс" text
+,"Адрес" text
+,"Дом" text
+,"ГРН" text
+,"ДатаНачДейств" text)
+
+/* PlPgSQL */
+do
+$$
+declare
+loc_xml xml;
+r record;
+begin
+    select chk_result into loc_xml FROM test_xml WHERE inn='7705905273' and xml_type = 2;
+    for r in (select * from branch_info(loc_xml) as ("НаимПолн" text
+                    ,"Страна" text
+                    ,"Индекс" text
+                    ,"Адрес" text
+                    ,"Дом" text
+                    ,"ГРН" text
+                    ,"ДатаНачДейств" text))
+    loop
+        RAISE NOTICE 'Наим=%, Адр=%, Дом=%', r."НаимПолн", r."Адрес", r."Дом";
+    end loop;    
+end;$$
+
+
+
