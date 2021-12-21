@@ -40,20 +40,11 @@ class Req1C(LogApp):
         else:
             logging.error('Недопустимая длина (%s) ИНН=%s', len_inn, inn)
 
-        #loc_payload = {}
-        #loc_payload["inn"] = inn
-        loc_payload = 'inn={}'.format(inn)
         loc_auth = HTTPBasicAuth(self.login, self.password)
-        sess = requests.Session()
-        sess.auth = loc_auth
-        sess.headers.update({'Content-Type': 'text/xml; charset=utf-8'})
-        # sess.verify = False
-        req = requests.Request('GET', url=loc_url + '?' + loc_payload)
+        loc_payload = {}
+        loc_payload["inn"] = inn
 
-        prepped = sess.prepare_request(req)
-        res = sess.send(prepped, timeout=5)
-
-        #res = requests.post(url=loc_url, auth=loc_auth, data=loc_payload)
+        res = requests.get(url=loc_url, auth=loc_auth, params=loc_payload)
         logging.info('res.url=%s', res.url)
         logging.info('res.text=%s', res.text)
 
