@@ -36,7 +36,7 @@ class Req1C(LogApp):
         if len_inn == 10:
             loc_url = '{}/{}'.format(SITE, CORP_URL)
         elif len_inn == 12:
-            loc_url = '{}/{}'.format(SITE, CORP_URL)
+            loc_url = '{}/{}'.format(SITE, PERS_URL)
         else:
             logging.error('Недопустимая длина (%s) ИНН=%s', len_inn, inn)
 
@@ -47,9 +47,10 @@ class Req1C(LogApp):
         res = requests.get(url=loc_url, auth=loc_auth, params=loc_payload)
         logging.info('res.url=%s', res.url)
         logging.info('res.text=%s', res.text)
+        return res.text
 
 if __name__ == '__main__':
     PARSER.add_argument('--inn', type=str, help='ИНН: 10 или 12 цифр')
     ARGS = PARSER.parse_args()
     REQ = Req1C(args=ARGS, description='запрос реквизитов по ИНН')
-    REQ.get_requisites(ARGS.inn)
+    DATA = REQ.get_requisites(ARGS.inn)
