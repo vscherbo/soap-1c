@@ -50,14 +50,23 @@ ret_post = ''
 
 res = plpy.execute("select * from gen_req_1c('{0}')".format(arg_inn))
 ret_flg = res[0]["ret_flg"]
+
+inn_in_answ = res[0].get("inn")
+if inn_in_answ is None:
+    ret_flg = False 
+
 if ret_flg:
-    reqs = json.loads(res[0]["ret_jsonb"])
-    if reqs:
+    reqs = json.loads(res[0].get("ret_jsonb"))
+    if reqs is not None:
         if len(arg_inn) == 10:
-            ret_short_name = reqs['name'].get('shortNameFromEgrul', "no shortNameFromEgrul")
-            ret_full_name = reqs['name'].get('fullNameFromEgrul', "no fullNameFromEgrul")
-            #ret_short_name = reqs['name']['shortName']
-            #ret_full_name = reqs['name']['fullName']
+            reqs_name = reqs.get('name')
+            if reqs_name is not None:
+                ret_short_name = reqs_name.get('shortNameFromEgrul', "no shortNameFromEgrul")
+                ret_full_name = reqs_name.get('fullNameFromEgrul', "no fullNameFromEgrul")
+            else:
+                ret_short_name = "no NameFromEgrul"
+                ret_full_name = "no NameFromEgrul"
+
             ret_kpp = reqs['kpp']['value']
             ret_ogrn = reqs['ogrn']
             mngr_info = reqs.get('headPersonInfo')
@@ -66,12 +75,12 @@ if ret_flg:
             else:
                 mngr = None
             if mngr:
-                    fio = []
-                    fio.append(mngr.get('lastName').encode('utf-8'))
-                    fio.append(mngr.get('name').encode('utf-8'))
-                    fio.append(mngr.get('patronymic').encode('utf-8'))
-                    ret_name = ' '.join(fio)
-                    ret_post = mngr.get('position', 'должность не известна').encode('utf-8')
+                fio = []
+                fio.append(mngr.get('lastName').encode('utf-8'))
+                fio.append(mngr.get('name').encode('utf-8'))
+                fio.append(mngr.get('patronymic').encode('utf-8'))
+                ret_name = ' '.join(fio)
+                ret_post = mngr.get('position', 'должность не известна').encode('utf-8')
             # addr info
             ret_address = reqs['address'].get('value')
             addr_data = reqs['address']
@@ -146,7 +155,12 @@ if ret_flg:
             ret_flg = False
     else:
         ret_flg = False
-        
+else:
+    reqs = json.loads(res[0].get("ret_jsonb"))
+    if reqs is not None:
+        plpy.warning('gen_req_1c returns={%s} arg_inn=%s', reqs, arg_inn)
+
+
 return ret_flg, ret_short_name, ret_full_name, ret_kpp, ret_ogrn,\
 ret_emails ,\
         ret_phones ,\
