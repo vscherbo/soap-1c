@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION arc_energo.gen_req_1c(
   RETURNS record AS
 $BODY$
 import requests
+from plpy import spiexceptions
 #import json
 
 ret_flg = False
@@ -33,12 +34,29 @@ if loc_url:
     loc_payload["inn"] = arg_inn
 
     try:
+        plpy.log('>>> TRY section')
         res = requests.get(url=loc_url, auth=loc_auth, params=loc_payload)
+    except requests.exceptions:
+        plpy.error("requests.exceptions")
+    except spiexceptions.ExternalRoutineException:  #, e:
+        plpy.error("spiexceptions.ExternalRoutineException")
+        ret_flg = False
+    except spiexceptions:
+        plpy.error("spiexceptions")
+        ret_flg = False
     except plpy.SPIError, e:
-        plpy.error("Query 1C error {0}, err={2}".format(loc_url, e.sqlstate))
+        plpy.error("SPIError")
+        #plpy.error("Query 1C error {0}, err={1}".format(loc_url, e.sqlstate))
         ret_flg = False
     else:
-        ret_flg = True if res.status_code in good_status else False
+        plpy.log('>>> ELSE section')
+        #ret_flg = True if res.status_code in good_status else False
+        if res.status_code in good_status:
+            ret_flg = True
+        else:
+            ret_flg = False
+            plpy.error("Query 1C returns NOT good_status {0}".format(res.status_code))
+
         ret_jsonb = res.text
 else:
    ret_flg = False
