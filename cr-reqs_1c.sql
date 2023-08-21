@@ -51,9 +51,9 @@ ret_post = ''
 res = plpy.execute("select * from gen_req_1c('{0}')".format(arg_inn))
 ret_flg = res[0]["ret_flg"]
 
-inn_in_answ = res[0].get("inn")
-if inn_in_answ is None:
-    ret_flg = False 
+#inn_in_answ = res[0].get("inn")
+#if inn_in_answ is None:
+#    ret_flg = False 
 
 if ret_flg:
     reqs = json.loads(res[0].get("ret_jsonb"))
@@ -67,8 +67,12 @@ if ret_flg:
                 ret_short_name = "no NameFromEgrul"
                 ret_full_name = "no NameFromEgrul"
 
-            ret_kpp = reqs['kpp']['value']
-            ret_ogrn = reqs['ogrn']
+            #ret_kpp = reqs['kpp']['value']
+            #ret_ogrn = reqs['ogrn']
+            ret_kpp = reqs.get('kpp')
+            if ret_kpp is not None:
+                ret_kpp = ret_kpp.get('value')
+            ret_ogrn = reqs.get('ogrn')
             mngr_info = reqs.get('headPersonInfo')
             if mngr_info:
                 mngr = mngr_info.get('director')
@@ -82,8 +86,13 @@ if ret_flg:
                 ret_name = ' '.join(fio)
                 ret_post = mngr.get('position', 'должность не известна').encode('utf-8')
             # addr info
-            ret_address = reqs['address'].get('value')
-            addr_data = reqs['address']
+            #ret_address = reqs['address'].get('value')
+            ret_address = reqs.get('address')
+            if ret_address is not None:
+                ret_address = ret_address.get('value')
+                addr_data = reqs['address']
+            else:
+                addr_data = None
             if addr_data:
                 #ret_address = addr_data.get('source', 'address unknown')
                 ret_country = addr_data.get('country', 'country unknown')
@@ -145,17 +154,22 @@ if ret_flg:
                     #plpy.info('filtered appartments=%s' % apartments)
                     ret_flat = ' '.join(filter(None, apartments))
         elif len(arg_inn) == 12:
-            #plpy.log('query to EGRIP is not realized. arg_inn=%s', arg_inn)
-            ret_short_name = reqs['person'].get('fio', "no fio from EGRIP")
-            ret_full_name = reqs['person'].get('fio', "no fio from EGRIP")
-            ret_ogrn = reqs['registrationInfo'].get('ogrn', "no OGRN from EGRIP")
-            ret_flg = True
+            ret_flg = False
+            person = reqs.get('person')
+            if person is not None:
+                ret_short_name = reqs['person'].get('fio', "no fio from EGRIP")
+                ret_full_name = reqs['person'].get('fio', "no fio from EGRIP")
+            registrationInfo = reqs.get('registrationInfo')
+            if registrationInfo is not None:
+                ret_ogrn = reqs['registrationInfo'].get('ogrn', "no OGRN from EGRIP")
+                ret_flg = True
         else:
             plpy.log('Wrong length (%s)of arg_inn=%s', len(arg_inn), arg_inn)
             ret_flg = False
     else:
         ret_flg = False
 else:
+    #reqs = json.loads(res[0].get("ret_jsonb").encode('utf-8'))
     reqs = json.loads(res[0].get("ret_jsonb"))
     if reqs is not None:
         plpy.warning('gen_req_1c returns={%s} arg_inn=%s', reqs, arg_inn)
